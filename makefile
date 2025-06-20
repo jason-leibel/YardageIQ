@@ -57,6 +57,11 @@ refresh-db: ## Reset and reseed the DB (shortcut)
 	@make migrate-fresh
 	@make seed
 
+##@ Test
+
+test: ## Run tests
+	@docker compose exec php php artisan test
+
 ##@ Project
 
 setup: ## setup the project
@@ -67,5 +72,10 @@ setup: ## setup the project
 	@make seed
 
 update-cert: ## Generate a local SSL certificate
+ifeq ($(OS),Windows_NT)
+	if not exist bootstrap\nginx mkdir bootstrap\nginx
+	mkcert -key-file bootstrap\nginx\key.pem -cert-file bootstrap\nginx\cert.pem yardageiq.local
+else
 	mkdir -p bootstrap/nginx
 	mkcert -key-file bootstrap/nginx/key.pem -cert-file bootstrap/nginx/cert.pem yardageiq.local
+endif

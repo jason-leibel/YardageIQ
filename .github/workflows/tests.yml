@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build PHP container
+        run: docker compose --env-file .env build php
+      - name: Install Composer dependencies
+        run: docker compose run --rm php composer install --no-interaction --prefer-dist
+      - name: Build Node container
+        run: docker compose --env-file .env build node
+      - name: Install Node dependencies
+        run: docker compose run --rm node npm ci --no-audit --prefer-offline
+      - name: Run Node build
+        run: docker compose run --rm node npm run build
+      - name: Run PHPUnit
+        run: docker compose run --rm php php artisan test
