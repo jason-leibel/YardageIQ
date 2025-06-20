@@ -1,12 +1,19 @@
 <?php
 
+use App\Models\WedgeStat;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('dashboard', [
-        'stats' => [
-            ['club' => '7 Iron', 'pro' => ['launch' => 17, 'spin' => 7000], 'amateur' => ['launch' => 19, 'spin' => 6500], 'regular' => ['launch' => 21, 'spin' => 6000]],
-            ['club' => 'Driver', 'pro' => ['launch' => 12, 'spin' => 2500], 'amateur' => ['launch' => 14, 'spin' => 3000], 'regular' => ['launch' => 16, 'spin' => 3500]],
-        ]
-    ]);
+    $grouped = WedgeStat::all()
+        ->groupBy('club')
+        ->map(function ($items) {
+            return [
+                'club' => $items->first()->club,
+                'pro' => $items->firstWhere('group', 'Pro'),
+                'amateur' => $items->firstWhere('group', 'Amateur'),
+                'regular' => $items->firstWhere('group', 'Recreational'),
+            ];
+        });
+
+    return view('dashboard', ['stats' => $grouped]);
 });

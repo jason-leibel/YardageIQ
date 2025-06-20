@@ -7,23 +7,36 @@
     </div>
 
     <div class="table-container">
-        <table class="stats-table">
-            <thead>
-                <tr>
-                    <th>Club</th>
-                    <th class="text-center">Pro</th>
-                    <th class="text-center">Amateur</th>
-                    <th class="text-center">Regular</th>
-                </tr>
+        <table class="stats-table w-full border-collapse">
+            <thead class="bg-coolgray text-left">
+            <tr>
+                <th class="p-2 border">Club</th>
+                <th class="p-2 border text-center">Type</th>
+                <th class="p-2 border text-center">Distance</th>
+                <th class="p-2 border text-center">Swing Speed</th>
+                <th class="p-2 border text-center">Clubhead Speed</th>
+                <th class="p-2 border text-center">Smash Factor</th>
+                <th class="p-2 border text-center">Launch</th>
+                <th class="p-2 border text-center">Ball Speed</th>
+            </tr>
             </thead>
             <tbody>
             @foreach ($stats as $row)
-                <tr>
-                    <td class="font-medium">{{ $row['club'] }}</td>
-                    <td class="text-center">{{ $row['pro']['launch'] }}°</td>
-                    <td class="text-center">{{ $row['amateur']['launch'] }}°</td>
-                    <td class="text-center">{{ $row['regular']['launch'] }}°</td>
-                </tr>
+                @foreach (['pro', 'amateur', 'regular'] as $type)
+                    @php $data = $row[$type]; @endphp
+                    @if ($data)
+                        <tr class="border-t hover:bg-softblue">
+                            <td class="p-2 border">{{ $row['club'] }}</td>
+                            <td class="p-2 border text-center capitalize">{{ $type }}</td>
+                            <td class="p-2 border text-center">{{ $data['distance'] }}</td>
+                            <td class="p-2 border text-center">{{ $data['swing_speed'] }}</td>
+                            <td class="p-2 border text-center">{{ $data['clubhead_speed'] }}</td>
+                            <td class="p-2 border text-center">{{ $data['smash_factor'] }}</td>
+                            <td class="p-2 border text-center">{{ $data['launch_angle'] }}°</td>
+                            <td class="p-2 border text-center">{{ $data['ball_speed'] }}</td>
+                        </tr>
+                    @endif
+                @endforeach
             @endforeach
             </tbody>
         </table>
