@@ -16,4 +16,4 @@ jobs:
       - name: Install Composer dependencies
         run: docker compose run --rm php composer install --no-interaction --prefer-dist
       - name: Run PHPUnit
-        run: docker compose run --rm php php artisan test --no-interaction
+        run: docker compose run --rm php php artisan test
