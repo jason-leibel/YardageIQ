@@ -9,7 +9,7 @@ development environment.
 1. **Clone the repo**
 
 ```bash
-git clone https://github.com/your-username/yardageiq.git
+git clone https://github.com/jason-leibe/yardageiq.git
 cd yardageiq
 ```
 
