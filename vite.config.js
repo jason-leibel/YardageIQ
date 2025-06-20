@@ -1,22 +1,12 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
-import fs from 'fs';
 
 export default defineConfig({
     server: {
-        host: 'yardageiq.local',
-        port: 5173,
-        strictPort: true,
-        https: {
-            key: fs.readFileSync('certs/yardageiq.local-key.pem'),
-            cert: fs.readFileSync('certs/yardageiq.local.pem'),
-        },
-        hmr: {
-            host: 'yardageiq.local',
-            protocol: 'wss',
-            port: 5173,
-        },
+        host: '0.0.0.0', // 👈 expose Vite outside container
+        port: 5173,      // 👈 lock to 5173 so Laravel knows where to find it
+        strictPort: true // 👈 fail if taken — better for dev/debug
     },
     plugins: [
         laravel({
