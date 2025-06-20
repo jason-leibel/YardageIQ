@@ -41,13 +41,15 @@ jobs:
 
           METRICS=$(grep -oP '<metrics[^>]+' coverage.xml | tail -n1)
 
-          TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+')
-          COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+')
+          TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+"')
+          COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+"')
 
           echo "Raw metrics: $METRICS"
-          echo "Extracted: COVERED=$COVERED TOTAL=$TOTAL"
+          echo "Extracted:"
+          echo "  TOTAL = $TOTAL"
+          echo "  COVERED = $COVERED"
 
-          if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
+          if [ -z "$TOTAL" ] || [ -z "$COVERED" ] || [ "$TOTAL" -eq 0 ]; then
             echo "❌ Failed to extract valid metrics"
             echo "coverage=0" >> $GITHUB_OUTPUT
             exit 1
@@ -58,6 +60,7 @@ jobs:
 
           echo "📈 Coverage: $COVERED / $TOTAL = ${COVERAGE_ROUNDED}%"
           echo "coverage=${COVERAGE_ROUNDED}" >> $GITHUB_OUTPUT
+
 
 
       - name: 🛡️ Create coverage badge
