@@ -1,6 +1,5 @@
 name: 📊 Coverage Badge Workflow
 
-# Trigger the workflow on push, PR, or manual dispatch
 on:
   workflow_dispatch:
   push:
@@ -14,62 +13,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 📥 Step 1: Checkout the latest code
       - name: 🔄 Checkout repository
         uses: actions/checkout@v4
 
-      # 🐘 Step 2: Build the PHP container
       - name: 🏗️ Build PHP container
         run: docker compose --env-file .env build php
 
-      # 📦 Step 3: Install PHP dependencies using Composer
       - name: 📦 Install Composer dependencies
         run: docker compose run --rm php composer install --no-interaction --prefer-dist
 
-      # 🟦 Step 4: Build the Node container
       - name: 🏗️ Build Node container
         run: docker compose --env-file .env build node
 
-      # 📦 Step 5: Install Node.js dependencies
       - name: 📦 Install Node dependencies
         run: docker compose run --rm node npm ci --no-audit --prefer-offline
 
-      # 🧱 Step 6: Build frontend assets
       - name: 🧱 Run Node build
         run: docker compose run --rm node npm run build
 
-      # ✅ Step 7: Run PHPUnit tests with coverage report
       - name: ✅ Run PHPUnit with coverage
         run: docker compose run --rm php php artisan test --coverage-clover=coverage.xml
 
-      # 📊 Step 8: Extract coverage percentage
       - name: 📊 Extract coverage percentage
+        id: coverage
         run: |
-          echo "🔍 Looking for overall coverage from final <metrics> block..."
           TOTAL=$(grep -oP 'statements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
           COVERED=$(grep -oP 'coveredstatements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
 
           if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
-            echo "❌ Failed to extract valid coverage numbers"
-            echo "COVERAGE=0" >> $GITHUB_ENV
+            echo "COVERAGE=0" >> $GITHUB_OUTPUT
             exit 1
           fi
 
           COVERAGE=$(echo "scale=2; ($COVERED/$TOTAL)*100" | bc -l)
           COVERAGE_ROUNDED=$(printf "%.0f" "$COVERAGE")
+          echo "📈 Coverage: $COVERED / $TOTAL = ${COVERAGE_ROUNDED}%"
+          echo "coverage=${COVERAGE_ROUNDED}" >> $GITHUB_OUTPUT
 
-          echo "📈 Coverage: $COVERED / $TOTAL = $COVERAGE_ROUNDED%"
-          echo "COVERAGE=$COVERAGE_ROUNDED" >> $GITHUB_ENV
-
-
-      # 🛡️ Step 9: Create coverage badge
       - name: 🛡️ Create coverage badge
+        env:
+          COVERAGE: ${{ steps.coverage.outputs.coverage }}
         run: |
           mkdir -p public/badges
           curl -o public/badges/coverage.svg "https://img.shields.io/badge/coverage-${COVERAGE}%25-brightgreen"
 
-      # 🚀 Step 10: Commit and push badge to main branch
       - name: 🚀 Commit and push coverage badge
+        env:
+          COVERAGE: ${{ steps.coverage.outputs.coverage }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
