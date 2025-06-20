@@ -1,8 +1,5 @@
 # YardageIQ
 
-[![CI](https://github.com/jason-leibe/yardageiq/actions/workflows/tests.yml/badge.svg)](https://github.com/jason-leibe/yardageiq/actions/workflows/tests.yml)
-[![codecov](https://codecov.io/gh/jason-leibe/yardageiq/branch/main/graph/badge.svg)](https://codecov.io/gh/jason-leibe/yardageiq)
-
 YardageIQ is a small Laravel demo that displays golf club statistics. The project
 uses Vite to compile SCSS and JavaScript and ships with a Docker based
 development environment.
