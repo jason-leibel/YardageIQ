@@ -3,8 +3,6 @@ name: 🚦 Continuous Integration
 # Trigger the workflow on push, PR, or manual dispatch
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
   pull_request:
 
 jobs:
@@ -38,30 +36,4 @@ jobs:
 
       # ✅ Step 7: Run PHPUnit tests with coverage report
       - name: ✅ Run PHPUnit with coverage
-        run: docker compose run --rm php php artisan test --coverage-clover=coverage.xml
-
-      # 📊 Step 8: Extract coverage percentage
-      - name: 📊 Extract coverage percentage
-        run: |
-          echo "🔍 Looking for overall coverage from final <metrics> block..."
-          TOTAL=$(grep -oP 'statements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
-          COVERED=$(grep -oP 'coveredstatements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
-
-          if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
-            echo "❌ Failed to extract valid coverage numbers"
-            echo "COVERAGE=0" >> $GITHUB_ENV
-            exit 1
-          fi
-
-          COVERAGE=$(echo "scale=2; ($COVERED/$TOTAL)*100" | bc -l)
-          COVERAGE_ROUNDED=$(printf "%.0f" "$COVERAGE")
-
-          echo "📈 Coverage: $COVERED / $TOTAL = $COVERAGE_ROUNDED%"
-          echo "COVERAGE=$COVERAGE_ROUNDED" >> $GITHUB_ENV
-
-
-      # 🛡️ Step 9: Create coverage badge
-      - name: 🛡️ Create coverage badge
-        run: |
-          mkdir -p public/badges
-          curl -o public/badges/coverage.svg "https://img.shields.io/badge/coverage-${COVERAGE}%25-brightgreen"
+        run: docker compose run --rm php php artisan test
