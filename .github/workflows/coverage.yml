@@ -37,18 +37,25 @@ jobs:
       - name: 📊 Extract coverage percentage
         id: coverage
         run: |
-          TOTAL=$(grep -oP 'statements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
-          COVERED=$(grep -oP 'coveredstatements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
+          echo "🔍 Extracting final <metrics> block for total project coverage..."
+
+          METRICS=$(grep -oP '<metrics[^>]+' coverage.xml | tail -n1)
+
+          TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+')
+          COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+')
 
           if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
-            echo "COVERAGE=0" >> $GITHUB_OUTPUT
+            echo "❌ Failed to extract valid metrics"
+            echo "coverage=0" >> $GITHUB_OUTPUT
             exit 1
           fi
 
           COVERAGE=$(echo "scale=2; ($COVERED/$TOTAL)*100" | bc -l)
           COVERAGE_ROUNDED=$(printf "%.0f" "$COVERAGE")
+
           echo "📈 Coverage: $COVERED / $TOTAL = ${COVERAGE_ROUNDED}%"
           echo "coverage=${COVERAGE_ROUNDED}" >> $GITHUB_OUTPUT
+
 
       - name: 🛡️ Create coverage badge
         env:
