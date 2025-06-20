@@ -1,5 +1,6 @@
-name: CI
+name: 🚦 Continuous Integration
 
+# Trigger the workflow on push, PR, or manual dispatch
 on:
   workflow_dispatch:
   push:
@@ -9,18 +10,44 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Build PHP container
+      # 📥 Step 1: Checkout the latest code
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+
+      # 🐘 Step 2: Build the PHP container
+      - name: 🏗️ Build PHP container
         run: docker compose --env-file .env build php
-      - name: Install Composer dependencies
+
+      # 📦 Step 3: Install PHP dependencies using Composer
+      - name: 📦 Install Composer dependencies
         run: docker compose run --rm php composer install --no-interaction --prefer-dist
-      - name: Build Node container
+
+      # 🟦 Step 4: Build the Node container
+      - name: 🏗️ Build Node container
         run: docker compose --env-file .env build node
-      - name: Install Node dependencies
+
+      # 📦 Step 5: Install Node.js dependencies
+      - name: 📦 Install Node dependencies
         run: docker compose run --rm node npm ci --no-audit --prefer-offline
-      - name: Run Node build
+
+      # 🧱 Step 6: Build frontend assets
+      - name: 🧱 Run Node build
         run: docker compose run --rm node npm run build
-      - name: Run PHPUnit with coverage
+
+      # ✅ Step 7: Run PHPUnit tests with coverage report
+      - name: ✅ Run PHPUnit with coverage
         run: docker compose run --rm php php artisan test --coverage-clover=coverage.xml
 
+      # 📊 Step 8: Extract coverage percentage
+      - name: 📊 Extract coverage percentage
+        run: |
+          COVERAGE=$(grep -oPm1 "(?<=<coverage line-rate=\")\d+\.\d+" coverage.xml)
+          echo "COVERAGE=$(printf %.0f "$COVERAGE" | bc)" >> $GITHUB_ENV
+
+      # 🛡️ Step 9: Create coverage badge
+      - name: 🛡️ Create coverage badge
+        run: |
+          mkdir -p public/badges
+          curl -o public/badges/coverage.svg "https://img.shields.io/badge/coverage-${COVERAGE}%25-brightgreen"
