@@ -57,6 +57,11 @@ refresh-db: ## Reset and reseed the DB (shortcut)
 	@make migrate-fresh
 	@make seed
 
+##@ Test
+
+test: ## Run tests
+	@docker compose exec php php artisan test
+
 ##@ Project
 
 setup: ## setup the project
