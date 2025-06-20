@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>YardageIQ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite(['resources/css/app.scss', 'resources/js/app.js'])
 </head>
 <body>
 
 <header class="navbar">
     <div class="container nav-container">
-        <a href="/" class="brand">
+        <a href="{{ route('landing') }}" class="brand">
             <h1>YardageIQ</h1>
         </a>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
         <nav id="mainNav" class="nav-links">
+            <a href="{{ route('landing') }}" class="{{ request()->routeIs('landing') ? 'active' : '' }}">Overview</a>
             <a href="{{ route('dashboard', ['group' => 'Pro']) }}" class="{{ request('group') === 'Pro' ? 'active' : '' }}">Pro</a>
             <a href="{{ route('dashboard', ['group' => 'Amateur']) }}" class="{{ request('group') === 'Amateur' ? 'active' : '' }}">Amateur</a>
             <a href="{{ route('dashboard', ['group' => 'Recreational']) }}" class="{{ request('group') === 'Recreational' ? 'active' : '' }}">Recreational</a>
         </nav>
     </div>
 </header>
+
 
 <main class="main-content">
     <div class="container">
