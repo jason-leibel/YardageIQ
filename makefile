@@ -63,7 +63,8 @@ setup: ## setup the project
 	@make update-cert
 	@make docker-build
 	@make composer-install
-	@make migrate-seed
+	@make migrate-fresh
+	@make seed
 
 update-cert: ## Generate a local SSL certificate
 	mkdir -p bootstrap/nginx

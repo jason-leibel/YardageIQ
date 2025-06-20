@@ -1,44 +1,48 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="page-title">Club Stats Overview</h2>
+    <h2 class="page-title">Club Stats – {{ $selectedGroup }} Golfer</h2>
+
     <div class="actions">
         <a href="#" class="button">Add Stat</a>
     </div>
 
-    <div class="table-container">
-        <table class="stats-table w-full border-collapse">
-            <thead class="bg-coolgray text-left">
-            <tr>
-                <th class="p-2 border">Club</th>
-                <th class="p-2 border text-center">Type</th>
-                <th class="p-2 border text-center">Distance</th>
-                <th class="p-2 border text-center">Swing Speed</th>
-                <th class="p-2 border text-center">Clubhead Speed</th>
-                <th class="p-2 border text-center">Smash Factor</th>
-                <th class="p-2 border text-center">Launch</th>
-                <th class="p-2 border text-center">Ball Speed</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($stats as $row)
-                @foreach (['pro', 'amateur', 'regular'] as $type)
-                    @php $data = $row[$type]; @endphp
-                    @if ($data)
-                        <tr class="border-t hover:bg-softblue">
-                            <td class="p-2 border">{{ $row['club'] }}</td>
-                            <td class="p-2 border text-center capitalize">{{ $type }}</td>
-                            <td class="p-2 border text-center">{{ $data['distance'] }}</td>
-                            <td class="p-2 border text-center">{{ $data['swing_speed'] }}</td>
-                            <td class="p-2 border text-center">{{ $data['clubhead_speed'] }}</td>
-                            <td class="p-2 border text-center">{{ $data['smash_factor'] }}</td>
-                            <td class="p-2 border text-center">{{ $data['launch_angle'] }}°</td>
-                            <td class="p-2 border text-center">{{ $data['ball_speed'] }}</td>
-                        </tr>
-                    @endif
-                @endforeach
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+    @foreach (['Wood', 'Iron', 'Wedge'] as $category)
+        @if(isset($stats[$category]) && count($stats[$category]))
+            <h3 class="text-xl font-bold mt-8" style="margin-top: 2rem; font-size: 1.25rem; color: #1E293B;">{{ $category }}s</h3>
+
+            <div class="table-container" style="margin-bottom: 2rem;">
+                <table class="stats-table">
+                    <thead>
+                    <tr>
+                        <th>Club</th>
+                        <th class="text-center">Distance</th>
+                        <th class="text-center">Swing Speed</th>
+                        <th class="text-center">Clubhead Speed</th>
+                        <th class="text-center">Smash Factor</th>
+                        <th class="text-center">Launch</th>
+                        <th class="text-center">Ball Speed</th>
+                        <th class="text-center">Group</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($stats[$category] as $club => $groupedRows)
+                        @foreach ($groupedRows as $row)
+                            <tr>
+                                <td class="font-medium">{{ $club }}</td>
+                                <td class="text-center">{{ $row->distance }}</td>
+                                <td class="text-center">{{ $row->swing_speed }}</td>
+                                <td class="text-center">{{ $row->clubhead_speed }}</td>
+                                <td class="text-center">{{ $row->smash_factor }}</td>
+                                <td class="text-center">{{ $row->launch }}°</td>
+                                <td class="text-center">{{ $row->ball_speed }}</td>
+                                <td class="text-center">{{ $row->group }}</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    @endforeach
 @endsection

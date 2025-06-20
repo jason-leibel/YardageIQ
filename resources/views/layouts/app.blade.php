@@ -9,9 +9,13 @@
 
 <header>
     <div class="container">
-        <h1>YardageIQ</h1>
+        <a href="/">
+            <h1>YardageIQ</h1>
+        </a>
         <nav>
-            <a href="/">Home</a>
+            <a href="{{ route('dashboard', ['group' => 'Pro']) }}" class="{{ request('group') === 'Pro' ? 'active' : '' }}">Pro</a>
+            <a href="{{ route('dashboard', ['group' => 'Amateur']) }}" class="{{ request('group') === 'Amateur' ? 'active' : '' }}">Amateur</a>
+            <a href="{{ route('dashboard', ['group' => 'Recreational']) }}" class="{{ request('group') === 'Recreational' ? 'active' : '' }}">Recreational</a>
         </nav>
     </div>
 </header>

@@ -12,6 +12,17 @@ body {
   margin: 0;
 }
 
+nav a {
+    margin-right: 1rem;
+    font-weight: 500;
+}
+
+nav a.active {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+
 header {
   background-color: $primary;
   color: #fff;
