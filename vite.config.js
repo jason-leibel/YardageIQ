@@ -21,7 +21,7 @@ export default defineConfig({
                 path.resolve(__dirname, 'bootstrap/nginx/cert.pem'),
             ),
         },
-        host: 'yardageiq.local',
+        host: '0.0.0.0',
         port: 5173,
         strictPort: true,
         origin: 'https://yardageiq.local:5173',

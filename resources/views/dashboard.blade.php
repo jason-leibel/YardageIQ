@@ -1,26 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">YardageIQ – Club Stats Overview</h1>
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-extrabold mb-8 text-center text-green-700">Club Stats Overview</h2>
 
-    <table class="w-full border-collapse">
-        <thead>
-        <tr class="bg-gray-100 text-left">
-            <th class="p-2 border">Club</th>
-            <th class="p-2 border">Pro Launch</th>
-            <th class="p-2 border">Amateur Launch</th>
-            <th class="p-2 border">Regular Launch</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($stats as $row)
-            <tr class="border-t">
-                <td class="p-2 border">{{ $row['club'] }}</td>
-                <td class="p-2 border">{{ $row['pro']['launch'] }}°</td>
-                <td class="p-2 border">{{ $row['amateur']['launch'] }}°</td>
-                <td class="p-2 border">{{ $row['regular']['launch'] }}°</td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+        <div class="bg-white shadow overflow-hidden rounded-lg">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-green-100">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-green-800 uppercase tracking-wider">Club</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-green-800 uppercase tracking-wider">Pro</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-green-800 uppercase tracking-wider">Amateur</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-green-800 uppercase tracking-wider">Regular</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                @foreach ($stats as $row)
+                    <tr class="hover:bg-green-50 transition">
+                        <td class="px-6 py-4 font-medium text-gray-900">{{ $row['club'] }}</td>
+                        <td class="px-6 py-4 text-center">{{ $row['pro']['launch'] }}°</td>
+                        <td class="px-6 py-4 text-center">{{ $row['amateur']['launch'] }}°</td>
+                        <td class="px-6 py-4 text-center">{{ $row['regular']['launch'] }}°</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 @endsection
