@@ -1,4 +1,4 @@
-name: 🔌 Attach Symfony Artifact to Release
+name: 🔌 Attach Laravel Artifact to Release
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ on:
         type: string
 
 jobs:
-  create-symfony-artifact:
+  create-laravel-artifact:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     name: ⚒️ Creating Release Package
@@ -55,8 +55,8 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --no-progress --no-suggest --no-scripts --prefer-dist
 
-      - name: 📦 Package Symfony
-        run: tar cfz package.tgz bin config migrations public src vendor templates .env CHANGELOG.md composer.json
+      - name: 📦 Package Laravel Application
+        run: tar -czf release.tar.gz app bootstrap config public resources routes storage vendor .env artisan composer.json composer.lock CHANGELOG.md
 
       - name: 📎 Publishing Artifact to Release
         uses: actions/upload-release-asset@v1
