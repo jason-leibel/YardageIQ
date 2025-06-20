@@ -3,10 +3,6 @@
 @section('content')
     <h2 class="page-title">Club Stats – {{ $selectedGroup }} Golfer</h2>
 
-    <div class="actions">
-        <a href="#" class="button">Add Stat</a>
-    </div>
-
     @foreach (['Wood', 'Iron', 'Wedge'] as $category)
         @if(isset($stats[$category]) && count($stats[$category]))
             <h3 class="text-xl font-bold mt-8" style="margin-top: 2rem; font-size: 1.25rem; color: #1E293B;">{{ $category }}s</h3>
