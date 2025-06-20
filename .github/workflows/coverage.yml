@@ -41,8 +41,8 @@ jobs:
 
           METRICS=$(grep -oP '<metrics[^>]+' coverage.xml | tail -n1)
 
-          TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+"')
-          COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+"')
+          TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+')
+          COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+')
 
           echo "Raw metrics: $METRICS"
           echo "Extracted:"
