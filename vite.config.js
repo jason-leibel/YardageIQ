@@ -15,7 +15,9 @@ export default defineConfig({
             key: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/key.pem')),
             cert: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/cert.pem')),
         },
-        host: '0.0.0.0',
+        // Bind directly to the development URL to ensure the correct address
+        // is written to the `.hot` file used by Laravel's asset helper.
+        host: 'yardageiq.local',
         port: 5173,
         strictPort: true,
         origin: 'https://yardageiq.local', // Match exactly your browser URL
