@@ -21,10 +21,3 @@
 
 ---
 
-## 🐳 Running Locally with Docker
-
-1. **Clone the repo**
-
-```bash
-git clone https://github.com/your-username/yardageiq.git
-cd yardageiq
