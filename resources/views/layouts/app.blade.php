@@ -7,12 +7,13 @@
 </head>
 <body>
 
-<header>
-    <div class="container">
-        <a href="/">
+<header class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="brand">
             <h1>YardageIQ</h1>
         </a>
-        <nav>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+        <nav id="mainNav" class="nav-links">
             <a href="{{ route('dashboard', ['group' => 'Pro']) }}" class="{{ request('group') === 'Pro' ? 'active' : '' }}">Pro</a>
             <a href="{{ route('dashboard', ['group' => 'Amateur']) }}" class="{{ request('group') === 'Amateur' ? 'active' : '' }}">Amateur</a>
             <a href="{{ route('dashboard', ['group' => 'Recreational']) }}" class="{{ request('group') === 'Recreational' ? 'active' : '' }}">Recreational</a>
