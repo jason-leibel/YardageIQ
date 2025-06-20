@@ -27,3 +27,13 @@ make setup
 
 Visit `https://yardageiq.local` and Vite will hot reload assets from
 `https://yardageiq.local:5173`.
+
+## Screenshots
+
+<!-- TODO: screenshot 1 -->
+
+<!-- TODO: screenshot 2 -->
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
