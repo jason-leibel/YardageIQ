@@ -5,7 +5,15 @@ export default {
         './resources/js/**/*.js',
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                primary: '#4F46E5',
+                turf: '#22C55E',
+                slate: '#1E293B',
+                softblue: '#EEF2FF',
+                coolgray: '#E2E8F0',
+            },
+        },
     },
     plugins: [],
 }
