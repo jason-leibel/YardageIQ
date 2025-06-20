@@ -50,5 +50,5 @@ yarn-error.log
 .idea/material_theme_project_new.xml
 ###< PHPStorm ###
 
-bootstrap/nginx
+bootstrap/nginx/*
 coverage.xml
