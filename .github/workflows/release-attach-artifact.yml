@@ -1,3 +1,5 @@
+name: 🔌 Attach Symfony Artifact to Release
+
 on:
   workflow_dispatch:
     inputs:
