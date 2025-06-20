@@ -14,10 +14,19 @@ export default defineConfig({
     ],
     server: {
         https: {
-            key: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/key.pem')),
-            cert: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/cert.pem')),
+            key: fs.readFileSync(
+                path.resolve(__dirname, 'certs/yardageiq.local-key.pem'),
+            ),
+            cert: fs.readFileSync(
+                path.resolve(__dirname, 'certs/yardageiq.local.pem'),
+            ),
         },
         host: 'yardageiq.local',
         port: 5173,
+        hmr: {
+            protocol: 'wss',
+            host: 'yardageiq.local',
+            port: 5173,
+        },
     },
 });
