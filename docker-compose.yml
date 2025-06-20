@@ -1,0 +1,88 @@
+services:
+  php:
+    build:
+      context: docker
+      dockerfile: php.dockerfile
+      args:
+        - version=${PHP_TAG}
+    container_name: "${PROJECT_NAME}_php"
+    depends_on:
+      - mariadb
+    environment:
+      PHP_FPM_USER: wodby
+      PHP_FPM_GROUP: wodby
+      PHP_DATE_TIMEZONE: America/Regina # to match UAT and Production
+      COLUMNS: 80 # Set 80 columns for docker exec -it.
+      # To disable XDebug you have to comment out PHP_XDEBUG as it will check for the presence of the property rather
+      # than the value of it to determine whether to turn on xdebug
+      PHP_XDEBUG: 1
+      PHP_XDEBUG_MODE: debug,coverage
+      PHP_XDEBUG_DEFAULT_ENABLE: 1
+      PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
+      PHP_EXTENSIONS_DISABLE: xhprof,spx
+      PHP_XDEBUG_CLIENT_HOST: host.docker.internal
+      PHP_XDEBUG_IDEKEY: PHPSTORM
+      PHP_XDEBUG_REMOTE_LOG: /tmp/php-xdebug.log
+      PHP_XDEBUG_MAX_NESTING_LEVEL: 10000
+      PHP_MAX_EXECUTION_TIME: 900
+      PHP_MAX_INPUT_TIME: 300
+      PHP_MAX_INPUT_VARS: 4000
+      PHP_MEMORY_LIMIT: 2G
+    volumes:
+      - .:/var/www/html/
+
+  nginx:
+    image: wodby/nginx:$NGINX_TAG
+    container_name: "${PROJECT_NAME}_nginx"
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      NGINX_STATIC_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_SERVER_ROOT: /var/www/html/public
+      NGINX_CONF_INCLUDE: /var/www/html/bootstrap/nginx/vhost.conf
+      NGINX_CLIENT_BODY_BUFFER_SIZE: 32k
+    volumes:
+      - ./public/:/var/www/html/public:cached
+      - ./var/log/nginx:/var/www/html/var/log/nginx:cached
+      - ./bootstrap/nginx/:/var/www/html/bootstrap/nginx/
+      - ./vendor/:/var/www/html/vendor
+
+  mariadb:
+    image: wodby/mariadb:$MARIADB_TAG
+    labels:
+      com.symfony.server.service-prefix: 'DATABASE'
+    container_name: "${PROJECT_NAME}_mariadb"
+    stop_grace_period: 30s
+    ports:
+      - "33450:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+        MYSQL_DATABASE: ${DB_NAME:-yardageiq}
+        MYSQL_USER: ${DB_USER:-laravel}
+        MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+
+    volumes:
+      - mariadbdata:/var/lib/mysql
+
+  node:
+    image: node:$NODE_TAG
+    container_name: "${PROJECT_NAME}_node"
+    working_dir: /app
+    command: bash -c '[[ "${INSTALL_DEPENDENCIES}" == "true" ]] && npm ci --no-audit --prefer-offline; npm run dev'
+    volumes:
+      - .:/app
+    ports:
+        - "5173:5173"
+    tty: true
+
+volumes:
+  # Store the mariadb datafiles in a local volume.
+  # Volumes can be seen in portainer and persist through container rebuilds.
+  # The files are not stored in the OSX filesystem but rather the docker volume (external from the container).
+  mariadbdata:
+  mariadbdata_test:
