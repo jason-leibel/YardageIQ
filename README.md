@@ -1,11 +1,11 @@
 # YardageIQ
 
-**YardageIQ** is a stat dashboard that visualizes average golf club data across different player skill levels — including launch angles, spin rates, and other performance metrics. Built with Laravel 12 and TailwindCSS.
+**YardageIQ** is a stat dashboard that visualizes average golf club data across different player skill levels — including launch angles, spin rates, and other performance metrics. Built with Laravel 12 and standard SCSS styling.
 
 ## 🏗️ Features
 
 - Compare stats across **Pros**, **Amateurs**, and **Regulars**
-- Clean UI using **TailwindCSS**
+- Clean UI using **SCSS**
 - Docker-based local dev setup
 - Ready to scale with database seeding, filtering, and charting
 
@@ -15,7 +15,7 @@
 
 - PHP 8.3 / Laravel 12
 - MariaDB (via Docker)
-- TailwindCSS
+- SCSS
 - Vite (via Node)
 - Docker + Docker Compose
 
