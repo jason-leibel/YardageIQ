@@ -15,12 +15,12 @@ export default defineConfig({
             key: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/key.pem')),
             cert: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/cert.pem')),
         },
-        // Bind directly to the development URL to ensure the correct address
-        // is written to the `.hot` file used by Laravel's asset helper.
-        host: 'yardageiq.local',
+        // Listen on all interfaces so the dev server is reachable from the host
+        // machine while still writing the correct URL to the `.hot` file.
+        host: '0.0.0.0',
         port: 5173,
         strictPort: true,
-        origin: 'https://yardageiq.local', // Match exactly your browser URL
+        origin: 'https://yardageiq.local:5173',
         cors: {
             origin: 'https://yardageiq.local',
             credentials: true,
@@ -29,6 +29,9 @@ export default defineConfig({
             protocol: 'wss',
             host: 'yardageiq.local',
             port: 5173,
+        },
+        watch: {
+            usePolling: true,
         },
     },
 })

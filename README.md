@@ -1,25 +1,8 @@
 # YardageIQ
 
-**YardageIQ** is a stat dashboard that visualizes average golf club data across different player skill levels — including launch angles, spin rates, and other performance metrics. Built with Laravel 12 and standard SCSS styling.
-
-## 🏗️ Features
-
-- Compare stats across **Pros**, **Amateurs**, and **Regulars**
-- Clean UI using **SCSS**
-- Docker-based local dev setup
-- Ready to scale with database seeding, filtering, and charting
-
----
-
-## 🚀 Stack
-
-- PHP 8.3 / Laravel 12
-- MariaDB (via Docker)
-- SCSS
-- Vite (via Node)
-- Docker + Docker Compose
-
----
+YardageIQ is a small Laravel demo that displays golf club statistics. The project
+uses Vite to compile SCSS and JavaScript and ships with a Docker based
+development environment.
 
 ## 🐳 Running Locally with Docker
 
@@ -28,3 +11,19 @@
 ```bash
 git clone https://github.com/your-username/yardageiq.git
 cd yardageiq
+```
+
+2. **Start the containers**
+
+```bash
+make setup
+```
+
+3. **Add the development domain to your hosts file**
+
+```text
+127.0.0.1 yardageiq.local
+```
+
+Visit `https://yardageiq.local` and Vite will hot reload assets from
+`https://yardageiq.local:5173`.
