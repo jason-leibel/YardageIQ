@@ -1,0 +1,67 @@
+on:
+  workflow_dispatch:
+    inputs:
+      upload_url:
+        description: 'Upload URL'
+        required: true
+        type: string
+      tag_name:
+        description: 'Tag of the targeted release. (ex: 1.2.1)'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      upload_url:
+        required: true
+        type: string
+      tag_name:
+        required: true
+        type: string
+
+jobs:
+  create-symfony-artifact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    name: ⚒️ Creating Release Package
+    steps:
+      - name: ✔️ Checkout Project
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.tag_name }}
+          fetch-depth: 0
+
+      - name: 🐘 Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+
+      - name: 💾 Get Composer Cache Path
+        id: get-composer-cache-path
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: 📩 Cache Composer Packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-composer-cache-path.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: 📥 Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --no-progress --no-suggest --no-scripts --prefer-dist
+
+      - name: 📦 Package Symfony
+        run: tar cfz package.tgz bin config migrations public src vendor templates .env CHANGELOG.md composer.json
+
+      - name: 📎 Publishing Artifact to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ inputs.upload_url }}
+          asset_path: ./package.tgz
+          asset_name: package.tgz
+          asset_content_type: application/zip

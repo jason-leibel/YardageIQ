@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Create New Release
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      upload_url: ${{ steps.release-please.outputs.upload_url }}
+    steps:
+      - name: 🥺 Release Please
+        uses: google-github-actions/release-please-action@v3
+        id: release-please
+        with:
+          release-type: simple
+          token: ${{ secrets.GITHUB_TOKEN }}
+          changelog-types: |-
+            [
+              { "type": "feat", "section": "Features", "hidden": false },
+              { "type": "fix", "section": "Bug Fixes", "hidden": false },
+              { "type": "chore", "section": "Miscellaneous", "hidden": false }
+            ]
+
+
+      - name: 🖨️ Print Upload URL
+        if: ${{ steps.release-please.outputs.release_created }}
+        run: echo -e "\e[1;43mupload_url = ${{ steps.release-please.outputs.upload_url }}\e[1;m"
+
+  publish-artifact:
+    needs: release
+    if: ${{ needs.release.outputs.release_created }}
+    uses: ./.github/workflows/release-attach-artifact.yml
+    with:
+      upload_url: ${{ needs.release.outputs.upload_url }}
+      tag_name: ${{ needs.release.outputs.tag_name }}
