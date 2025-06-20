@@ -1,8 +1,7 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
-import fs from 'fs';
-import path from 'path';
+import { defineConfig } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import fs from 'fs'
+import path from 'path'
 
 export default defineConfig({
     plugins: [
@@ -10,25 +9,24 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
     ],
     server: {
         https: {
-            key: fs.readFileSync(
-                path.resolve(__dirname, 'bootstrap/nginx/key.pem'),
-            ),
-            cert: fs.readFileSync(
-                path.resolve(__dirname, 'bootstrap/nginx/cert.pem'),
-            ),
+            key: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/key.pem')),
+            cert: fs.readFileSync(path.resolve(__dirname, 'bootstrap/nginx/cert.pem')),
         },
         host: '0.0.0.0',
         port: 5173,
         strictPort: true,
-        origin: 'https://yardageiq.local:5173',
+        origin: 'https://yardageiq.local', // Match exactly your browser URL
+        cors: {
+            origin: 'https://yardageiq.local',
+            credentials: true,
+        },
         hmr: {
             protocol: 'wss',
             host: 'yardageiq.local',
             port: 5173,
         },
     },
-});
+})
