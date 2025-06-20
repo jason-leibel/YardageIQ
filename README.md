@@ -30,9 +30,11 @@ Visit `https://yardageiq.local` and Vite will hot reload assets from
 
 ## Screenshots
 
-<!-- TODO: screenshot 1 -->
+### Landing Page
+![Screenshot 2025-06-20 091615](https://github.com/user-attachments/assets/df778e1c-e600-4f36-9cf9-3e79ef454ff6)
 
-<!-- TODO: screenshot 2 -->
+### Detail Page
+![Screenshot 2025-06-20 091545](https://github.com/user-attachments/assets/272daaca-556f-4aae-a86f-1e5fe1705ab0)
 
 ## Changelog
 
