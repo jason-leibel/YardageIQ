@@ -1,4 +1,4 @@
-name: 🚦 Continuous Integration
+name: 📊 Coverage Badge Workflow
 
 # Trigger the workflow on push, PR, or manual dispatch
 on:
