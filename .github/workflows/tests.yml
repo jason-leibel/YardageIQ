@@ -21,5 +21,9 @@ jobs:
         run: docker compose run --rm node npm ci --no-audit --prefer-offline
       - name: Run Node build
         run: docker compose run --rm node npm run build
-      - name: Run PHPUnit
-        run: docker compose run --rm php php artisan test
+      - name: Run PHPUnit with coverage
+        run: docker compose run --rm php php artisan test --coverage-clover=coverage.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: coverage.xml
