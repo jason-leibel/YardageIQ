@@ -44,6 +44,9 @@ jobs:
           TOTAL=$(echo "$METRICS" | grep -oP 'statements="\K\d+')
           COVERED=$(echo "$METRICS" | grep -oP 'coveredstatements="\K\d+')
 
+          echo "Raw metrics: $METRICS"
+          echo "Extracted: COVERED=$COVERED TOTAL=$TOTAL"
+
           if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
             echo "❌ Failed to extract valid metrics"
             echo "coverage=0" >> $GITHUB_OUTPUT
