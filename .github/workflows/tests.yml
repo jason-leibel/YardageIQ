@@ -43,8 +43,22 @@ jobs:
       # 📊 Step 8: Extract coverage percentage
       - name: 📊 Extract coverage percentage
         run: |
-          COVERAGE=$(grep -oPm1 "(?<=<coverage line-rate=\")\d+\.\d+" coverage.xml)
-          echo "COVERAGE=$(printf %.0f "$COVERAGE" | bc)" >> $GITHUB_ENV
+          echo "🔍 Looking for overall coverage from final <metrics> block..."
+          TOTAL=$(grep -oP 'statements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
+          COVERED=$(grep -oP 'coveredstatements="\d+"' coverage.xml | grep -oP '\d+' | tail -n1)
+
+          if [[ -z "$TOTAL" || -z "$COVERED" || "$TOTAL" -eq 0 ]]; then
+            echo "❌ Failed to extract valid coverage numbers"
+            echo "COVERAGE=0" >> $GITHUB_ENV
+            exit 1
+          fi
+
+          COVERAGE=$(echo "scale=2; ($COVERED/$TOTAL)*100" | bc -l)
+          COVERAGE_ROUNDED=$(printf "%.0f" "$COVERAGE")
+
+          echo "📈 Coverage: $COVERED / $TOTAL = $COVERAGE_ROUNDED%"
+          echo "COVERAGE=$COVERAGE_ROUNDED" >> $GITHUB_ENV
+
 
       # 🛡️ Step 9: Create coverage badge
       - name: 🛡️ Create coverage badge
