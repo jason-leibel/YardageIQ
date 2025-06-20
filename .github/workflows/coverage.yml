@@ -33,3 +33,14 @@ jobs:
 
       - name: ✅ Run PHPUnit with coverage
         run: docker compose run --rm php php artisan test --coverage-clover=coverage.xml
+
+      - name: 📈 Generate coverage badge
+        run: docker compose run --rm node npm run coverage:badge
+
+      - name: 🚀 Commit coverage badge
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add public/badges/coverage.svg
+          git commit -m "Update coverage badge" || echo "No changes to commit"
+          git push
